@@ -4,5 +4,5 @@ export interface Guest {
   email: string;
   cellPhone: string;
   picture: string;
-  isAttendeeConfirmed: boolean;
+  isAttendeeConfirmed: boolean | null;
 }

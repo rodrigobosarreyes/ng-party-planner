@@ -1,32 +1,30 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as fromGuests from '../../../../core/stores/guest';
+import { GuestService } from '../../services/guest.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-guests',
   standalone: true,
-  imports: [],
+  imports: [HttpClientModule],
+  providers: [GuestService],
   templateUrl: './guests.component.html',
   styleUrl: './guests.component.scss',
 })
 export class GuestsComponent implements OnInit {
   guests$ = this.store.select(fromGuests.selectAllGuests);
-  defaultGuests: ReadonlyArray<fromGuests.Guest> = [
-    {
-      id: crypto.randomUUID(),
-      cellPhone: '1',
-      email: 'email',
-      fullName: 'Full Name',
-      isAttendeeConfirmed: null,
-      picture: 'pic',
-    },
-  ];
 
-  constructor(private readonly store: Store) {}
+  constructor(
+    private readonly store: Store,
+    private readonly guestService: GuestService
+  ) {}
 
   ngOnInit(): void {
-    this.store.dispatch(
-      fromGuests.GuestsActions.loadGuests({ guests: this.defaultGuests })
-    );
+    this.guestService
+      .getAllUsers()
+      .subscribe((guests) =>
+        this.store.dispatch(fromGuests.GuestsActions.loadGuests({ guests }))
+      );
   }
 }

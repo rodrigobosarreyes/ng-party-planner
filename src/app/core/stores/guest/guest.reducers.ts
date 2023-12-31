@@ -8,7 +8,7 @@ export const guestsReducer = createReducer(
   initialState,
   on(
     GuestsActions.loadGuests,
-    (_state, action): ReadonlyArray<Guest> => action.guests
+    (_state, { guests }): ReadonlyArray<Guest> => [...guests]
   ),
   on(
     GuestsActions.addGuest,

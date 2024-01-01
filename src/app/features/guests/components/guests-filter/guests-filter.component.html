@@ -1,0 +1,8 @@
+<form [formGroup]="filterForm">
+  <p-selectButton
+    [options]="attendingOptions"
+    optionLabel="label"
+    optionValue="value"
+    formControlName="attending"
+    [unselectable]="true"></p-selectButton>
+</form>

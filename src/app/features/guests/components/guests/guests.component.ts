@@ -6,7 +6,7 @@ import {
   AttendingOption,
   GuestsFilterComponent,
 } from '../guests-filter/guests-filter.component';
-import { loadGuests } from '../../../../core/store/guests/guest.actions';
+import { GuestActions } from '../../../../core/store/guests/guest.actions';
 import { selectGuests } from '../../../../core/store/guests/guest.selectors';
 
 @Component({
@@ -25,7 +25,7 @@ export class GuestsComponent implements OnInit {
 
   ngOnInit(): void {
     this.store.dispatch(
-      loadGuests({
+      GuestActions.guestsLoaded({
         guests: [
           {
             cellPhone: '(986) 594-5601',

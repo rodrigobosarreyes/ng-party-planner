@@ -1,13 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { GuestsDataviewComponent } from '../guests-dataview/guests-dataview.component';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { GuestsDataviewComponent } from '../guests-dataview/guests-dataview.component';
+import { GuestActions } from '../../../../core/store/guests/guest.actions';
 import {
   AttendingOption,
   GuestsFilterComponent,
 } from '../guests-filter/guests-filter.component';
-import { GuestActions } from '../../../../core/store/guests/guest.actions';
-import { selectGuests } from '../../../../core/store/guests/guest.selectors';
 
 @Component({
   selector: 'app-guests',
@@ -17,8 +16,6 @@ import { selectGuests } from '../../../../core/store/guests/guest.selectors';
   styleUrl: './guests.component.scss',
 })
 export class GuestsComponent implements OnInit {
-  guests$ = this.store.select(selectGuests);
-
   filter: { attending: AttendingOption } = { attending: AttendingOption.ALL };
 
   constructor(private readonly store: Store) {}

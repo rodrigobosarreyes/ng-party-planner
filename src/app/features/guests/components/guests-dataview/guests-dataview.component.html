@@ -1,3 +1,11 @@
+<div class="flex justify-content-end">
+  <p-button
+    (onClick)="onClickAdd()"
+    label="Add"
+    severity="success"
+    icon="pi pi-plus"
+    [rounded]="true"></p-button>
+</div>
 <p-dataView [value]="guests">
   <ng-template pTemplate="list" let-guests>
     <div class="grid grid-nogutter">
@@ -14,7 +22,7 @@
               "></ng-container>
             <div class="flex align-self-center gap-2 font-xs">
               <p-button
-                (onClick)="guest.isAttendeeConfirmed = true"
+                (onClick)="onClickConfirm(guest)"
                 [disabled]="guest.isAttendeeConfirmed"
                 label="Confirm"
                 severity="success"
@@ -26,11 +34,19 @@
                   guest.isAttendeeConfirmed !== null &&
                   !guest.isAttendeeConfirmed
                 "
-                (onClick)="guest.isAttendeeConfirmed = false"
+                (onClick)="onClickReject(guest)"
                 label="Reject"
                 severity="danger"
                 size="small"
                 icon="pi pi-times"
+                [rounded]="true"></p-button>
+              <p-button
+                (onClick)="onClickRemove(guest)"
+                label="Remove"
+                [outlined]="true"
+                severity="danger"
+                size="small"
+                icon="pi pi-trash"
                 [rounded]="true"></p-button>
             </div>
           </div>
@@ -84,3 +100,14 @@
     </span>
   </div>
 </ng-template>
+
+<p-toast></p-toast>
+<p-confirmDialog>
+  <ng-template pTemplate="message" let-message>
+    <div
+      class="flex flex-column align-items-center w-full gap-3 border-bottom-1 surface-border">
+      <i class="pi pi-plus-circle text-6xl text-primary-500"></i>
+      <p>{{ message.message }}</p>
+    </div>
+  </ng-template>
+</p-confirmDialog>

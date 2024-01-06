@@ -1,3 +1,4 @@
+<p-toast></p-toast>
 <div class="flex justify-content-end">
   <p-button
     (onClick)="onClickAdd()"
@@ -102,12 +103,48 @@
 </ng-template>
 
 <p-toast></p-toast>
-<p-confirmDialog>
-  <ng-template pTemplate="message" let-message>
-    <div
-      class="flex flex-column align-items-center w-full gap-3 border-bottom-1 surface-border">
-      <i class="pi pi-plus-circle text-6xl text-primary-500"></i>
-      <p>{{ message.message }}</p>
+<p-dialog
+  [(visible)]="visible"
+  header="Create new Guest"
+  [modal]="true"
+  [draggable]="false">
+  <form [formGroup]="newGuestForm">
+    <div class="flex flex-column gap-2 mb-2">
+      <label for="name">Full name</label>
+      <input
+        type="text"
+        name="name"
+        id="name"
+        pInputText
+        formControlName="fullName" />
     </div>
-  </ng-template>
-</p-confirmDialog>
+    <div class="flex flex-column gap-2 mb-2">
+      <label for="email">Email</label>
+      <input type="email" id="email" pInputText formControlName="email" />
+    </div>
+    <div class="flex flex-column gap-2 mb-2">
+      <label for="cellphone">Cell Phone</label>
+      <input
+        type="text"
+        id="cellphone"
+        pInputText
+        formControlName="cellPhone" />
+    </div>
+    <div class="flex flex-column gap-2 mb-2">
+      <label for="picture">Picture URL</label>
+      <input type="text" id="picture" pInputText formControlName="picture" />
+    </div>
+    <div class="flex flex-row gap-2 mb-2">
+      <p-checkbox
+        formControlName="isAttendeeConfirmed"
+        [binary]="true"
+        inputId="attendee"></p-checkbox>
+      <label for="attendee">Is Attendee Confirm?</label>
+    </div>
+    <p-button
+      label="Save"
+      (onClick)="save()"
+      icon="pi pi-check"
+      [disabled]="newGuestForm.invalid"></p-button>
+  </form>
+</p-dialog>

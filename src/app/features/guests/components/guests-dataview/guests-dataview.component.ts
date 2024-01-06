@@ -94,7 +94,9 @@ export class GuestsDataviewComponent {
   }
 
   save(): void {
-    this.store.dispatch(GuestActions.guestAdded(this.newGuestForm.value));
+    const newGuest = this.newGuestForm.value;
+    newGuest.id = crypto.randomUUID();
+    this.store.dispatch(GuestActions.guestAdded(newGuest));
     this.messageService.add({
       severity: 'success',
       summary: 'Success',

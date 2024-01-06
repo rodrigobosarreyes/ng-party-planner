@@ -1,4 +1,4 @@
-<p-dataView [value]="guests">
+<p-dataView [value]="(guests$ | async) || []">
   <ng-template pTemplate="list" let-guests>
     <div class="grid grid-nogutter">
       @for (guest of guests; track guest.id; let first = $first) {

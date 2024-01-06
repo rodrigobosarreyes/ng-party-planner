@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { ButtonModule } from 'primeng/button';
 import { DataViewModule } from 'primeng/dataview';
 import { TagModule } from 'primeng/tag';
-import { ButtonModule } from 'primeng/button';
-import { Guest } from '../../../../core/store/guests/guest.model';
+import { selectGuests } from '../../../../core/store/guests/guest.selectors';
 
 @Component({
   selector: 'app-guests-dataview',
@@ -13,5 +14,7 @@ import { Guest } from '../../../../core/store/guests/guest.model';
   styleUrl: './guests-dataview.component.scss',
 })
 export class GuestsDataviewComponent {
-  @Input() guests!: Guest[];
+  guests$ = this.store.select(selectGuests);
+
+  constructor(private readonly store: Store) {}
 }

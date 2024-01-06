@@ -17,6 +17,7 @@ import {
 } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { Guest } from '../../../../core/store/guests/guest.model';
+import { GuestActions } from '../../../../core/store/guests/guest.actions';
 
 @Component({
   selector: 'app-guests-dataview',
@@ -57,24 +58,25 @@ export class GuestsDataviewComponent {
   }
 
   onClickConfirm(guest: Guest): void {
-    // TBD
+    this.store.dispatch(GuestActions.attendenceConfirmed(guest));
   }
 
   onClickReject(guest: Guest): void {
-    // TBD
+    this.store.dispatch(GuestActions.attendenceDeclined(guest));
   }
 
   onClickRemove(guest: Guest): void {
-    // TBD
+    this.store.dispatch(GuestActions.guestRemoved(guest));
   }
 
   save(): void {
-    this.visible = false;
+    this.store.dispatch(GuestActions.guestAdded(this.newGuestForm.value));
     this.messageService.add({
       severity: 'success',
       summary: 'Success',
       detail: `${this.newGuestForm.value.fullName} Added`,
     });
+    this.visible = false;
   }
 
   onClickAdd(): void {

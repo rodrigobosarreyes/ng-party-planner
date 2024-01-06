@@ -6,7 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
 import { CheckboxModule } from 'primeng/checkbox';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import {
   FormBuilder,
   FormGroup,
@@ -14,6 +14,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-guests-dataview',
@@ -28,8 +29,9 @@ import { InputTextModule } from 'primeng/inputtext';
     ReactiveFormsModule,
     InputTextModule,
     CheckboxModule,
+    ConfirmDialogModule,
   ],
-  providers: [MessageService],
+  providers: [MessageService, ConfirmationService],
   templateUrl: './guests-dataview.component.html',
   styleUrl: './guests-dataview.component.scss',
 })
@@ -40,6 +42,7 @@ export class GuestsDataviewComponent {
 
   constructor(
     private readonly messageService: MessageService,
+    private readonly confirmationService: ConfirmationService,
     private readonly formBuilder: FormBuilder
   ) {
     this.newGuestForm = this.formBuilder.group({
@@ -60,7 +63,27 @@ export class GuestsDataviewComponent {
   }
 
   onClickRemove(guest: unknown): void {
-    // TBD
+    this.confirmationService.confirm({
+      message: 'Do you want to remove this record?',
+      header: 'Remove Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      acceptButtonStyleClass: 'p-button-danger p-button-text',
+      rejectButtonStyleClass: 'p-button-text p-button-text',
+      accept: () => {
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Confirmed',
+          detail: 'Record removed',
+        });
+      },
+      reject: () => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Rejected',
+          detail: "Record didn't remove",
+        });
+      },
+    });
   }
 
   save(): void {

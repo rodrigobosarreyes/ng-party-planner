@@ -18,6 +18,7 @@ import {
 import { InputTextModule } from 'primeng/inputtext';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Guest } from '../../../../core/store/guests/guest.model';
+import { GuestActions } from '../../../../core/store/guests/guest.actions';
 
 @Component({
   selector: 'app-guests-dataview',
@@ -60,11 +61,11 @@ export class GuestsDataviewComponent {
   }
 
   onClickConfirm(guest: Guest): void {
-    // TBD
+    this.store.dispatch(GuestActions.attendenceConfirmed(guest));
   }
 
   onClickReject(guest: Guest): void {
-    // TBD
+    this.store.dispatch(GuestActions.attendenceDeclined(guest));
   }
 
   onClickRemove(guest: Guest): void {
@@ -75,6 +76,7 @@ export class GuestsDataviewComponent {
       acceptButtonStyleClass: 'p-button-danger p-button-text',
       rejectButtonStyleClass: 'p-button-text p-button-text',
       accept: () => {
+        this.store.dispatch(GuestActions.guestRemoved(guest));
         this.messageService.add({
           severity: 'info',
           summary: 'Confirmed',
@@ -92,12 +94,15 @@ export class GuestsDataviewComponent {
   }
 
   save(): void {
-    this.visible = false;
+    const newGuest = this.newGuestForm.value;
+    newGuest.id = crypto.randomUUID();
+    this.store.dispatch(GuestActions.guestAdded(newGuest));
     this.messageService.add({
       severity: 'success',
       summary: 'Success',
       detail: `${this.newGuestForm.value.fullName} Added`,
     });
+    this.visible = false;
   }
 
   onClickAdd(): void {

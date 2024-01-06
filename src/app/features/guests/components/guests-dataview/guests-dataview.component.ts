@@ -8,7 +8,7 @@ import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
 import { CheckboxModule } from 'primeng/checkbox';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import {
   FormBuilder,
   FormGroup,
@@ -16,6 +16,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Guest } from '../../../../core/store/guests/guest.model';
 import { GuestActions } from '../../../../core/store/guests/guest.actions';
 
@@ -32,8 +33,9 @@ import { GuestActions } from '../../../../core/store/guests/guest.actions';
     ReactiveFormsModule,
     InputTextModule,
     CheckboxModule,
+    ConfirmDialogModule,
   ],
-  providers: [MessageService],
+  providers: [MessageService, ConfirmationService],
   templateUrl: './guests-dataview.component.html',
   styleUrl: './guests-dataview.component.scss',
 })
@@ -45,8 +47,9 @@ export class GuestsDataviewComponent {
 
   constructor(
     private readonly messageService: MessageService,
-    private readonly formBuilder: FormBuilder,
-    private readonly store: Store
+    private readonly store: Store,
+    private readonly confirmationService: ConfirmationService,
+    private readonly formBuilder: FormBuilder
   ) {
     this.newGuestForm = this.formBuilder.group({
       fullName: [null, Validators.required],
@@ -66,7 +69,28 @@ export class GuestsDataviewComponent {
   }
 
   onClickRemove(guest: Guest): void {
-    this.store.dispatch(GuestActions.guestRemoved(guest));
+    this.confirmationService.confirm({
+      message: 'Do you want to remove this record?',
+      header: 'Remove Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      acceptButtonStyleClass: 'p-button-danger p-button-text',
+      rejectButtonStyleClass: 'p-button-text p-button-text',
+      accept: () => {
+        this.store.dispatch(GuestActions.guestRemoved(guest));
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Confirmed',
+          detail: 'Record removed',
+        });
+      },
+      reject: () => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Rejected',
+          detail: "Record didn't remove",
+        });
+      },
+    });
   }
 
   save(): void {

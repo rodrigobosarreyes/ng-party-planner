@@ -3,15 +3,12 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { GuestsDataviewComponent } from '../guests-dataview/guests-dataview.component';
 import { GuestActions } from '../../../../core/store/guests/guest.actions';
-import {
-  AttendingOption,
-  GuestsFilterComponent,
-} from '../guests-filter/guests-filter.component';
+import { AttendingOption } from '../guests-filter/guests-filter.component';
 
 @Component({
   selector: 'app-guests',
   standalone: true,
-  imports: [GuestsDataviewComponent, CommonModule, GuestsFilterComponent],
+  imports: [GuestsDataviewComponent, CommonModule],
   templateUrl: './guests.component.html',
   styleUrl: './guests.component.scss',
 })
@@ -51,20 +48,5 @@ export class GuestsComponent implements OnInit {
         ],
       })
     );
-  }
-
-  onChangeFilter(value: { attending: AttendingOption }) {
-    switch (value.attending) {
-      case AttendingOption.ALL:
-        break;
-      case AttendingOption.ATTENDING:
-        break;
-      case AttendingOption.NOT_ATTENDING:
-        break;
-      case AttendingOption.UNKNOW:
-        break;
-      default:
-        break;
-    }
   }
 }

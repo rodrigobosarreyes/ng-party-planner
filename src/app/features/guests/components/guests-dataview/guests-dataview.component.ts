@@ -18,6 +18,10 @@ import {
 import { InputTextModule } from 'primeng/inputtext';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Guest } from '../../../../core/store/guests/guest.model';
+import {
+  AttendingOption,
+  GuestsFilterComponent,
+} from '../guests-filter/guests-filter.component';
 
 @Component({
   selector: 'app-guests-dataview',
@@ -33,6 +37,7 @@ import { Guest } from '../../../../core/store/guests/guest.model';
     InputTextModule,
     CheckboxModule,
     ConfirmDialogModule,
+    GuestsFilterComponent,
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './guests-dataview.component.html',
@@ -43,6 +48,7 @@ export class GuestsDataviewComponent {
 
   visible = false;
   newGuestForm: FormGroup;
+  filter: { attending: AttendingOption } = { attending: AttendingOption.ALL };
 
   constructor(
     private readonly messageService: MessageService,
@@ -103,5 +109,20 @@ export class GuestsDataviewComponent {
   onClickAdd(): void {
     this.newGuestForm.reset();
     this.visible = true;
+  }
+
+  onChangeFilter(value: { attending: AttendingOption }) {
+    switch (value.attending) {
+      case AttendingOption.ALL:
+        break;
+      case AttendingOption.ATTENDING:
+        break;
+      case AttendingOption.NOT_ATTENDING:
+        break;
+      case AttendingOption.UNKNOW:
+        break;
+      default:
+        break;
+    }
   }
 }

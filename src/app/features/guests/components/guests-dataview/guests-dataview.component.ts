@@ -3,7 +3,12 @@ import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { DataViewModule } from 'primeng/dataview';
 import { TagModule } from 'primeng/tag';
-import { selectGuests } from '../../../../core/store/guests/guest.selectors';
+import {
+  selectConfirmedGuests,
+  selectGuests,
+  selectRejectedGuests,
+  selectUnknownGuests,
+} from '../../../../core/store/guests/guest.selectors';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
@@ -119,12 +124,16 @@ export class GuestsDataviewComponent {
   onChangeFilter(value: { attending: AttendingOption }) {
     switch (value.attending) {
       case AttendingOption.ALL:
+        this.guests$ = this.store.select(selectGuests);
         break;
       case AttendingOption.ATTENDING:
+        this.guests$ = this.store.select(selectConfirmedGuests);
         break;
       case AttendingOption.NOT_ATTENDING:
+        this.guests$ = this.store.select(selectRejectedGuests);
         break;
       case AttendingOption.UNKNOW:
+        this.guests$ = this.store.select(selectUnknownGuests);
         break;
       default:
         break;

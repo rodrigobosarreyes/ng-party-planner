@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { GuestActions } from './guest.actions';
+import { GuestAPIActions, GuestActions } from './guest.actions';
 import { Guest } from './guest.model';
 
 const initialState: Array<Guest> = [];
@@ -7,7 +7,7 @@ const initialState: Array<Guest> = [];
 export const guestsReducer = createReducer(
   initialState,
   on(
-    GuestActions.guestsLoaded,
+    GuestAPIActions.guestsLoadedSuccess,
     (_state, { guests }): Array<Guest> => [...guests]
   ),
   on(

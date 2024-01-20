@@ -1,10 +1,10 @@
-import { createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
 import { GuestAPIActions, GuestActions } from './guest.actions';
 import { Guest } from './guest.model';
 
 const initialState: Array<Guest> = [];
 
-export const guestsReducer = createReducer(
+const guestsReducer = createReducer(
   initialState,
   on(
     GuestAPIActions.guestsLoadedSuccess,
@@ -29,3 +29,28 @@ export const guestsReducer = createReducer(
       state.map((g) => (g.id === id ? { ...g, isAttendeeConfirmed: false } : g))
   )
 );
+
+export const guestsFeature = createFeature({
+  name: 'guests',
+  reducer: guestsReducer,
+  extraSelectors: ({ selectGuestsState }) => ({
+    selectConfirmedGuests: createSelector(selectGuestsState, (guest) =>
+      guest.filter((g) => g.isAttendeeConfirmed === true)
+    ),
+    selectRejectedGuests: createSelector(selectGuestsState, (guest) =>
+      guest.filter((g) => g.isAttendeeConfirmed === false)
+    ),
+    selectUnknownGuests: createSelector(selectGuestsState, (guest) =>
+      guest.filter((g) => g.isAttendeeConfirmed === null)
+    ),
+  }),
+});
+
+export const {
+  name,
+  reducer,
+  selectGuestsState,
+  selectConfirmedGuests,
+  selectRejectedGuests,
+  selectUnknownGuests,
+} = guestsFeature;

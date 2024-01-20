@@ -5,10 +5,10 @@ import { DataViewModule } from 'primeng/dataview';
 import { TagModule } from 'primeng/tag';
 import {
   selectConfirmedGuests,
-  selectGuests,
+  selectGuestsState,
   selectRejectedGuests,
   selectUnknownGuests,
-} from '../../../../core/store/guests/guest.selectors';
+} from '../../../../core/store/guests/guest.reducer';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
@@ -50,7 +50,7 @@ import { GuestActions } from '../../../../core/store/guests/guest.actions';
   styleUrl: './guests-dataview.component.scss',
 })
 export class GuestsDataviewComponent {
-  guests$ = this.store.select(selectGuests);
+  guests$ = this.store.select(selectGuestsState);
 
   visible = false;
   newGuestForm: FormGroup;
@@ -124,7 +124,7 @@ export class GuestsDataviewComponent {
   onChangeFilter(value: { attending: AttendingOption }) {
     switch (value.attending) {
       case AttendingOption.ALL:
-        this.guests$ = this.store.select(selectGuests);
+        this.guests$ = this.store.select(selectGuestsState);
         break;
       case AttendingOption.ATTENDING:
         this.guests$ = this.store.select(selectConfirmedGuests);

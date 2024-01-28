@@ -1,0 +1,153 @@
+<app-guests-filter (filter)="onChangeFilter($event)"></app-guests-filter>
+
+<p-toast></p-toast>
+<div class="flex justify-content-end">
+  <p-button
+    (onClick)="onClickAdd()"
+    label="Add"
+    severity="success"
+    icon="pi pi-plus"
+    [rounded]="true"></p-button>
+</div>
+<p-dataView [value]="(guests$ | async) || []">
+  <ng-template pTemplate="list" let-guests>
+    <div class="grid grid-nogutter">
+      @for (guest of guests; track guest.id; let first = $first) {
+        <div class="col-12">
+          <div
+            class="flex flex-row align-items-start p-4 gap-4"
+            [class.border-top-1]="!first"
+            [class.surface-border]="!first">
+            <ng-container
+              *ngTemplateOutlet="
+                guestDetail;
+                context: { $implicit: guest }
+              "></ng-container>
+            <div class="flex align-self-center gap-2 font-xs">
+              <p-button
+                (onClick)="onClickConfirm(guest)"
+                [disabled]="guest.isAttendeeConfirmed"
+                label="Confirm"
+                severity="success"
+                size="small"
+                icon="pi pi-check"
+                [rounded]="true"></p-button>
+              <p-button
+                [disabled]="
+                  guest.isAttendeeConfirmed !== null &&
+                  !guest.isAttendeeConfirmed
+                "
+                (onClick)="onClickReject(guest)"
+                label="Reject"
+                severity="danger"
+                size="small"
+                icon="pi pi-times"
+                [rounded]="true"></p-button>
+              <p-button
+                (onClick)="onClickRemove(guest)"
+                label="Remove"
+                [outlined]="true"
+                severity="danger"
+                size="small"
+                icon="pi pi-trash"
+                [rounded]="true"></p-button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </ng-template>
+</p-dataView>
+
+<!-- Guest row template -->
+<ng-template #guestDetail let-guest>
+  <img
+    class="w-6rem shadow-2 block mx-auto border-round"
+    [src]="guest.picture"
+    [alt]="guest.fullName" />
+  <div
+    class="flex flex-row justify-content-between align-items-start flex-1 gap-4">
+    <div class="flex flex-column align-items-start gap-3">
+      <div>
+        <span class="text-2xl font-bold text-900 mr-1">
+          {{ guest.fullName }}
+        </span>
+        @if (guest.isAttendeeConfirmed !== null) {
+          <p-tag
+            [value]="guest.isAttendeeConfirmed ? 'Attending' : 'Not Attending'"
+            [severity]="
+              guest.isAttendeeConfirmed ? 'success' : 'danger'
+            "></p-tag>
+        }
+      </div>
+      <ng-container
+        *ngTemplateOutlet="
+          contactInfo;
+          context: { $implicit: guest.email, icon: 'pi-at' }
+        "></ng-container>
+      <ng-container
+        *ngTemplateOutlet="
+          contactInfo;
+          context: { $implicit: guest.cellPhone, icon: 'pi-phone' }
+        "></ng-container>
+    </div>
+  </div>
+</ng-template>
+
+<p-confirmDialog></p-confirmDialog>
+
+<!-- Guest Contact Info template -->
+<ng-template #contactInfo let-info let-icon="icon">
+  <div class="flex align-items-center gap-3">
+    <span class="flex align-items-center gap-2">
+      <i class="pi" [ngClass]="icon"></i>
+      <div class="font-semibold">{{ info }}</div>
+    </span>
+  </div>
+</ng-template>
+
+<p-dialog
+  [(visible)]="visible"
+  header="Create new Guest"
+  [modal]="true"
+  [draggable]="false">
+  <form [formGroup]="newGuestForm">
+    <div class="flex flex-column gap-2 mb-2">
+      <label for="name">Full name</label>
+      <input
+        type="text"
+        name="name"
+        id="name"
+        pInputText
+        formControlName="fullName" />
+    </div>
+    <div class="flex flex-column gap-2 mb-2">
+      <label for="email">Email</label>
+      <input type="email" id="email" pInputText formControlName="email" />
+    </div>
+    <div class="flex flex-column gap-2 mb-2">
+      <label for="cellphone">Cell Phone</label>
+      <input
+        type="text"
+        id="cellphone"
+        pInputText
+        formControlName="cellPhone" />
+    </div>
+    <div class="flex flex-column gap-2 mb-2">
+      <label for="picture">Picture URL</label>
+      <input type="text" id="picture" pInputText formControlName="picture" />
+    </div>
+    <div class="flex flex-row gap-2 mb-2">
+      <p-checkbox
+        formControlName="isAttendeeConfirmed"
+        [binary]="true"
+        inputId="attendee"></p-checkbox>
+      <label for="attendee">Is Attendee Confirm?</label>
+    </div>
+    <p-button
+      label="Save"
+      (onClick)="save()"
+      icon="pi pi-check"
+      [disabled]="newGuestForm.invalid"></p-button>
+  </form>
+</p-dialog>

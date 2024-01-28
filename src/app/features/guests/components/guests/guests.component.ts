@@ -1,30 +1,23 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import * as fromGuests from '../../../../core/stores/guest';
-import { GuestService } from '../../services/guest.service';
-import { HttpClientModule } from '@angular/common/http';
+import { GuestsDataviewComponent } from '../guests-dataview/guests-dataview.component';
+import { GuestActions } from '../../../../core/store/guests/guest.actions';
+import { AttendingOption } from '../guests-filter/guests-filter.component';
 
 @Component({
   selector: 'app-guests',
   standalone: true,
-  imports: [HttpClientModule],
-  providers: [GuestService],
+  imports: [GuestsDataviewComponent, CommonModule],
   templateUrl: './guests.component.html',
   styleUrl: './guests.component.scss',
 })
 export class GuestsComponent implements OnInit {
-  guests$ = this.store.select(fromGuests.selectAllGuests);
+  filter: { attending: AttendingOption } = { attending: AttendingOption.ALL };
 
-  constructor(
-    private readonly store: Store,
-    private readonly guestService: GuestService
-  ) {}
+  constructor(private readonly store: Store) {}
 
   ngOnInit(): void {
-    this.guestService
-      .getAllUsers()
-      .subscribe((guests) =>
-        this.store.dispatch(fromGuests.GuestsActions.loadGuests({ guests }))
-      );
+    this.store.dispatch(GuestActions.pageOpened());
   }
 }

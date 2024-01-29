@@ -3,6 +3,7 @@ import { provideState } from '@ngrx/store';
 import { guestsFeature } from './core/store/guests/guest.reducer';
 import { provideEffects } from '@ngrx/effects';
 import * as guestsEffects from './core/store/guests/guest.effects';
+import { musicFeature } from './core/store/music/music.reducer';
 
 export const routes: Routes = [
   {
@@ -24,5 +25,6 @@ export const routes: Routes = [
       import('./features/music/components/music/music.component').then(
         (m) => m.MusicComponent
       ),
+    providers: [provideState(musicFeature)],
   },
 ];
